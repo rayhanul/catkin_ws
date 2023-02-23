@@ -217,3 +217,16 @@ catkin_install_python(PROGRAMS
   scripts/listener.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+
+catkin_install_python(PROGRAMS
+  scripts/turtle_tf2_broadcaster.py
+  
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+catkin_install_python(PROGRAMS
+  scripts/turtle_tf2_listener.py
+  
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

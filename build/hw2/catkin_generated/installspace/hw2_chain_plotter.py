@@ -68,6 +68,8 @@ def plot_joints(joint_positions, ax):
     ax.plot(x, y, "k.", markersize=10)
 
 
+
+
 def get_link_positions(config, W, L, D):
     """Compute the positions of the links and the joints of a 2D kinematic chain A_1, ..., A_m
 
@@ -89,11 +91,24 @@ def get_link_positions(config, W, L, D):
 
     for theta in config:
 
-        prev_joint=joint_positions[-1]
-        x=prev_joint[0] + (D-2) * math.cos(theta)
-        y=prev_joint[1] + (D-2) * math.sin(theta)
-        joint_positions.append([x,y])
+        # prev_joint=joint_positions[-1]
+        # x=prev_joint[0] + D * math.cos(theta) 
+        # y=prev_joint[1] + D * math.sin(theta)
+        # joint_positions.append([x,y])
+        # vertices=[]
+        # w=W/2
+        # l=L/2
 
+        # vertices.append([prev_joint[0] + w * math.sin(theta), prev_joint[1] - w * math.cos(theta)])
+        # vertices.append([prev_joint[0] - w * math.sin(theta), prev_joint[1] + w * math.cos(theta)])
+        # vertices.append([x - w * math.sin(theta), y + w * math.cos(theta)])
+        # vertices.append([x + w * math.sin(theta), y - w * math.cos(theta)])
+        # link_vertices.append(vertices)
+
+        prev_joint=joint_positions[-1]
+        x=(prev_joint[0] * math.cos(theta) - prev_joint[1] * math.sin(theta)) + D 
+        y=(prev_joint[0] * math.sin(theta) + prev_joint[1] * math.cos(theta)) + 0 
+        joint_positions.append([x,y])
         vertices=[]
         w=W/2
         l=L/2
@@ -103,6 +118,8 @@ def get_link_positions(config, W, L, D):
         vertices.append([x - w * math.sin(theta), y + w * math.cos(theta)])
         vertices.append([x + w * math.sin(theta), y - w * math.cos(theta)])
         link_vertices.append(vertices)
+
+
 
     return (joint_positions, link_vertices)
 
@@ -115,6 +132,8 @@ def get_link_indices_containing(v, config, W, L, D):
 
         return the subset of {1...m} that represents all the indices of the links that contain the given point v
     """
+
+    raise NotImplementedError
 
 
 if __name__ == "__main__":

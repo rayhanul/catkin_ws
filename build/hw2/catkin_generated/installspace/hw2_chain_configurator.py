@@ -28,14 +28,10 @@ def publish(config, W, L, D):
     rate = rospy.Rate(1) # 1hz
     var=Chain2D()
     while not rospy.is_shutdown():
-        # arr = [i for i in range(10)]
         var.config=config
         var.W=W 
         var.L=L 
         var.D=D 
-
-        # s1 = StringIO()
-        # Chain2D.serialize(s1)
         pub.publish(var)
         rate.sleep()
 

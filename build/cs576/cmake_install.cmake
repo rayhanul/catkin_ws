@@ -101,3 +101,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cs576" TYPE PROGRAM FILES "/home/rayhanul/catkin_ws/build/cs576/catkin_generated/installspace/listener.py")
 endif()
 
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cs576" TYPE PROGRAM FILES "/home/rayhanul/catkin_ws/build/cs576/catkin_generated/installspace/turtle_tf2_broadcaster.py")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cs576" TYPE PROGRAM FILES "/home/rayhanul/catkin_ws/build/cs576/catkin_generated/installspace/turtle_tf2_listener.py")
+endif()
+
