@@ -12,7 +12,7 @@ Once you have ROS installed in your computer, run following command to go to ros
 ```
 roscd hw2
 ``` 
-To make this package, go the catkin directory and run the following command 
+To install this package, go the catkin directory and run the following command 
 
 ```
 catkin_make 
