@@ -1,7 +1,7 @@
 
 
 
-#This ros package named hw2 can rotate and translate different links based on the input values. 
+# This ros package named hw2 can rotate and translate different links based on the input values. 
 
 
 In order run this package, you must have ROS noetic installed in your computer. Due to the dependencies, Linux based OS such as Ubuntu is preferable. 
