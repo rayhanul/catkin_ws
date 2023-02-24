@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import math 
 from hw2.msg import Chain2D 
 
+RADIAN_90=1.571
+RADIAN_45=.785
+RADIAN_180=3.142
 
 def get_chain_msg():
     """Return a message from the "chain_config" channel.
@@ -105,13 +108,11 @@ def get_link_positions(config, W, L, D):
         y= D * math.sin(theta) + 0 * math.cos(theta) + prev_joint[1] 
         joint_positions.append([x,y])
         vertices=[]
-        w=W/2
-        l=L/2
-        
-        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+1.571+.785), prev_joint[1] + diagonal_distance * math.sin(theta+1.571+.785)])
-        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+3.14+.785), prev_joint[1] +  diagonal_distance  * math.sin(theta+3.14+.785)])
-        vertices.append([x + diagonal_distance  * math.cos(theta-.785), y + diagonal_distance  * math.sin(theta-.785)])
-        vertices.append([x +  diagonal_distance * math.cos(theta+.785), y + diagonal_distance * math.sin(theta+.785)])
+
+        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+RADIAN_90+RADIAN_45), prev_joint[1] + diagonal_distance * math.sin(theta+RADIAN_90+RADIAN_45)])
+        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta + RADIAN_180 +RADIAN_45), prev_joint[1] +  diagonal_distance  * math.sin(theta+RADIAN_180+RADIAN_45)])
+        vertices.append([x + diagonal_distance  * math.cos(theta-RADIAN_45), y + diagonal_distance  * math.sin(theta-RADIAN_45)])
+        vertices.append([x +  diagonal_distance * math.cos(theta + RADIAN_45), y + diagonal_distance * math.sin(theta + RADIAN_45)])
         
         link_vertices.append(vertices)
 
@@ -146,15 +147,16 @@ def get_link_indices_containing(v, config, W, L, D):
         x2, y2 = all_link_positions[2]
         x3, y3 = all_link_positions[3]
         
-        # calculate the edge of the links
+        # calculate the edge of among the corners of the links
 
         Edge_1=(x1-x0) * (y-y0) - (y1-y0) * (x-x0)
         Edge_2=(x2-x1) * (y-y1) - (y2-y1) * (x-x1)
         Edge_3=(x3-x2) * (y-y2) - (y3-y2) * (x-x2)
         Edge_4=(x0-x3) * (y-y3) - (y0-y3) * (x-x3)
-        #  decide whether a point inside the four edges... 
 
+        #  decide whether a point inside the four edges... 
         if (Edge_1 >= 0 and Edge_2 >= 0 and Edge_3 >= 0 and Edge_4 >= 0) or (Edge_1 <= 0 and Edge_2 <= 0 and Edge_3 <= 0 and Edge_4 <= 0):
+            # +1 is added because link index starts from 1
             link_indices.append(i+1)
             
     return link_indices

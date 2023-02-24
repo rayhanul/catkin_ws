@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import math 
 from hw2.msg import Chain2D 
 
+RADIAN_90=1.571
+RADIAN_45=.785
+RADIAN_180=3.142
 
 def get_chain_msg():
     """Return a message from the "chain_config" channel.
@@ -33,6 +36,8 @@ def plot_chain(config, W, L, D):
     @type L: float, representing the length of each link
     @type D: float, the distance between the two points of attachment on each link
     """
+    # v=(7,7)
+    # print(get_link_indices_containing(v, config, W, L, D))
 
     (joint_positions, link_vertices) = get_link_positions(config, W, L, D)
 
@@ -85,38 +90,30 @@ def get_link_positions(config, W, L, D):
     """
     # TODO: Implement this function
     # raise NotImplementedError
+    def get_diagonal_distance():
+        w=W/2
+        return math.sqrt(w*w + w*w)
 
     joint_positions=[[0,0]]
     link_vertices=[]
-
+    new_randian=[0]
+    diagonal_distance=get_diagonal_distance()
     for theta in config:
 
-        # prev_joint=joint_positions[-1]
-        # x=prev_joint[0] + D * math.cos(theta) 
-        # y=prev_joint[1] + D * math.sin(theta)
-        # joint_positions.append([x,y])
-        # vertices=[]
-        # w=W/2
-        # l=L/2
-
-        # vertices.append([prev_joint[0] + w * math.sin(theta), prev_joint[1] - w * math.cos(theta)])
-        # vertices.append([prev_joint[0] - w * math.sin(theta), prev_joint[1] + w * math.cos(theta)])
-        # vertices.append([x - w * math.sin(theta), y + w * math.cos(theta)])
-        # vertices.append([x + w * math.sin(theta), y - w * math.cos(theta)])
-        # link_vertices.append(vertices)
-
         prev_joint=joint_positions[-1]
-        x=(prev_joint[0] * math.cos(theta) - prev_joint[1] * math.sin(theta)) + D 
-        y=(prev_joint[0] * math.sin(theta) + prev_joint[1] * math.cos(theta)) + 0 
+        prev_link_theta=new_randian[-1]
+        theta=theta+prev_link_theta
+        new_randian.append(theta)
+        x= D * math.cos(theta) - 0 * math.sin(theta) + prev_joint[0] 
+        y= D * math.sin(theta) + 0 * math.cos(theta) + prev_joint[1] 
         joint_positions.append([x,y])
         vertices=[]
-        w=W/2
-        l=L/2
 
-        vertices.append([prev_joint[0] + w * math.sin(theta), prev_joint[1] - w * math.cos(theta)])
-        vertices.append([prev_joint[0] - w * math.sin(theta), prev_joint[1] + w * math.cos(theta)])
-        vertices.append([x - w * math.sin(theta), y + w * math.cos(theta)])
-        vertices.append([x + w * math.sin(theta), y - w * math.cos(theta)])
+        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+RADIAN_90+RADIAN_45), prev_joint[1] + diagonal_distance * math.sin(theta+RADIAN_90+RADIAN_45)])
+        vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta + RADIAN_180 +RADIAN_45), prev_joint[1] +  diagonal_distance  * math.sin(theta+RADIAN_180+RADIAN_45)])
+        vertices.append([x + diagonal_distance  * math.cos(theta-RADIAN_45), y + diagonal_distance  * math.sin(theta-RADIAN_45)])
+        vertices.append([x +  diagonal_distance * math.cos(theta + RADIAN_45), y + diagonal_distance * math.sin(theta + RADIAN_45)])
+        
         link_vertices.append(vertices)
 
 
@@ -124,7 +121,10 @@ def get_link_positions(config, W, L, D):
     return (joint_positions, link_vertices)
 
 def get_link_indices_containing(v, config, W, L, D):
-    """@type config: a list [theta_1, ..., theta_m] where theta_1 represents the angle between A_1 and the x-axis,
+
+    """
+        @v type v: tuple(x,y), representing the location of a point
+        @type config: a list [theta_1, ..., theta_m] where theta_1 represents the angle between A_1 and the x-axis,
             and for each i such that 1 < i <= m, \theta_i represents the angle between A_i and A_{i-1}.
         @type W: float, representing the width of each link
         @type L: float, representing the length of each link
@@ -133,9 +133,38 @@ def get_link_indices_containing(v, config, W, L, D):
         return the subset of {1...m} that represents all the indices of the links that contain the given point v
     """
 
-    raise NotImplementedError
+    # Get the positions of all the links in the kinematic chain
+    (joint_position, link_positions) = get_link_positions(config, W, L, D)
+    x, y = v 
+    link_indices = []
+
+    for i in range(0, len(link_positions)):
+        all_link_positions=link_positions[i]
+
+        # assign four corners of a link into four points
+        x0, y0 = all_link_positions[0]
+        x1, y1 = all_link_positions[1]
+        x2, y2 = all_link_positions[2]
+        x3, y3 = all_link_positions[3]
+        
+        # calculate the edge of among the corners of the links
+
+        Edge_1=(x1-x0) * (y-y0) - (y1-y0) * (x-x0)
+        Edge_2=(x2-x1) * (y-y1) - (y2-y1) * (x-x1)
+        Edge_3=(x3-x2) * (y-y2) - (y3-y2) * (x-x2)
+        Edge_4=(x0-x3) * (y-y3) - (y0-y3) * (x-x3)
+
+        #  decide whether a point inside the four edges... 
+        if (Edge_1 >= 0 and Edge_2 >= 0 and Edge_3 >= 0 and Edge_4 >= 0) or (Edge_1 <= 0 and Edge_2 <= 0 and Edge_3 <= 0 and Edge_4 <= 0):
+            # +1 is added because link index starts from 1
+            link_indices.append(i+1)
+            
+    return link_indices
 
 
 if __name__ == "__main__":
     chain = get_chain_msg()
     plot_chain(chain.config, chain.W, chain.L, chain.D)
+
+
+    
