@@ -149,7 +149,6 @@ def get_link_indices_containing(v, config, W, L, D):
         x3, y3 = all_link_positions[3]
         
         # calculate the edge of among the corners of the links
-
         Edge_1=(x1-x0) * (y-y0) - (y1-y0) * (x-x0)
         Edge_2=(x2-x1) * (y-y1) - (y2-y1) * (x-x1)
         Edge_3=(x3-x2) * (y-y2) - (y3-y2) * (x-x2)
