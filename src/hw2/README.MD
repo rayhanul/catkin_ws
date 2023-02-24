@@ -32,5 +32,5 @@ rosrun hw2 hw2_chain_plotter.py
 
 
 In order to check the function get_link_indices_containing(v, config, W, L, D), please uncomment lines 36 and 37 in plot_chain() function. 
-**
-Example: v=(7,7), get_link_indices_containing(v, config, W, L, D) returns [1,2] where links index starts from 1. **
+
+**Example: v=(7,7), get_link_indices_containing(v, config, W, L, D) returns [1,2] where links index starts from 1.**
