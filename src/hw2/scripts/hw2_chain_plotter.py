@@ -33,6 +33,8 @@ def plot_chain(config, W, L, D):
     @type L: float, representing the length of each link
     @type D: float, the distance between the two points of attachment on each link
     """
+    # v=(7,7)
+    # print(get_link_indices_containing(v, config, W, L, D))
 
     (joint_positions, link_vertices) = get_link_positions(config, W, L, D)
 
@@ -108,12 +110,9 @@ def get_link_positions(config, W, L, D):
         
         vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+1.571+.785), prev_joint[1] + diagonal_distance * math.sin(theta+1.571+.785)])
         vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+3.14+.785), prev_joint[1] +  diagonal_distance  * math.sin(theta+3.14+.785)])
-        
-        
         vertices.append([x + diagonal_distance  * math.cos(theta-.785), y + diagonal_distance  * math.sin(theta-.785)])
         vertices.append([x +  diagonal_distance * math.cos(theta+.785), y + diagonal_distance * math.sin(theta+.785)])
         
-        link_vertices.append(vertices)
         link_vertices.append(vertices)
 
 
@@ -121,7 +120,10 @@ def get_link_positions(config, W, L, D):
     return (joint_positions, link_vertices)
 
 def get_link_indices_containing(v, config, W, L, D):
-    """@type config: a list [theta_1, ..., theta_m] where theta_1 represents the angle between A_1 and the x-axis,
+
+    """
+        @v type v: tuple(x,y), representing the location of a point
+        @type config: a list [theta_1, ..., theta_m] where theta_1 represents the angle between A_1 and the x-axis,
             and for each i such that 1 < i <= m, \theta_i represents the angle between A_i and A_{i-1}.
         @type W: float, representing the width of each link
         @type L: float, representing the length of each link
@@ -131,22 +133,36 @@ def get_link_indices_containing(v, config, W, L, D):
     """
 
     # Get the positions of all the links in the kinematic chain
-    link_positions = get_link_positions(config, W, L, D)
-    
-    # Initialize an empty list to store the indices of the links that contain the point
+    (joint_position, link_positions) = get_link_positions(config, W, L, D)
+    x, y = v 
     link_indices = []
-    
-    # Iterate over all the links in the chain and check if the given point lies on the link
-    for i in range(1, len(link_positions)):
-        x1, y1 = link_positions[i-1]
-        x2, y2 = link_positions[i]
-        # Check if the point lies on the line segment between the two points
-        if (min(x1, x2) <= v[0] <= max(x1, x2)) and (min(y1, y2) <= v[1] <= max(y1, y2)):
-            link_indices.append(i)
-    
+
+    for i in range(0, len(link_positions)):
+        all_link_positions=link_positions[i]
+
+        # assign four corners of a link into four points
+        x0, y0 = all_link_positions[0]
+        x1, y1 = all_link_positions[1]
+        x2, y2 = all_link_positions[2]
+        x3, y3 = all_link_positions[3]
+        
+        # calculate the edge of the links
+
+        Edge_1=(x1-x0) * (y-y0) - (y1-y0) * (x-x0)
+        Edge_2=(x2-x1) * (y-y1) - (y2-y1) * (x-x1)
+        Edge_3=(x3-x2) * (y-y2) - (y3-y2) * (x-x2)
+        Edge_4=(x0-x3) * (y-y3) - (y0-y3) * (x-x3)
+        #  decide whether a point inside the four edges... 
+
+        if (Edge_1 >= 0 and Edge_2 >= 0 and Edge_3 >= 0 and Edge_4 >= 0) or (Edge_1 <= 0 and Edge_2 <= 0 and Edge_3 <= 0 and Edge_4 <= 0):
+            link_indices.append(i+1)
+            
     return link_indices
 
 
 if __name__ == "__main__":
     chain = get_chain_msg()
     plot_chain(chain.config, chain.W, chain.L, chain.D)
+
+
+    
