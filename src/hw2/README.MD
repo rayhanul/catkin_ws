@@ -20,6 +20,7 @@ catkin_make
 After that, open another terminal and run "roscore" command to your terminal. 
 
 Then run the following command in another terminal 
+
 ```
 rosrun hw2 hw2_chain_configurator.py  0.7853981633974483 1.5707963267948966 -0.7853981633974483 -W 2 -L 12 -D 10
 ```
