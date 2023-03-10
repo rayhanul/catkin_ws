@@ -104,11 +104,12 @@ def get_link_positions(config, W, L, D):
         prev_link_theta=new_randian[-1]
         theta=theta+prev_link_theta
         new_randian.append(theta)
+        # computing joint position...
         x= D * math.cos(theta) - 0 * math.sin(theta) + prev_joint[0] 
         y= D * math.sin(theta) + 0 * math.cos(theta) + prev_joint[1] 
         joint_positions.append([x,y])
         vertices=[]
-
+        # computing four corners of each link...
         vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta+RADIAN_90+RADIAN_45), prev_joint[1] + diagonal_distance * math.sin(theta+RADIAN_90+RADIAN_45)])
         vertices.append([prev_joint[0] + diagonal_distance * math.cos(theta + RADIAN_180 +RADIAN_45), prev_joint[1] +  diagonal_distance  * math.sin(theta+RADIAN_180+RADIAN_45)])
         vertices.append([x + diagonal_distance  * math.cos(theta-RADIAN_45), y + diagonal_distance  * math.sin(theta-RADIAN_45)])
@@ -148,7 +149,6 @@ def get_link_indices_containing(v, config, W, L, D):
         x3, y3 = all_link_positions[3]
         
         # calculate the edge of among the corners of the links
-
         Edge_1=(x1-x0) * (y-y0) - (y1-y0) * (x-x0)
         Edge_2=(x2-x1) * (y-y1) - (y2-y1) * (x-x1)
         Edge_3=(x3-x2) * (y-y2) - (y3-y2) * (x-x2)
